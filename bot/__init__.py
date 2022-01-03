@@ -114,6 +114,14 @@ download_dict = {}
 rss_dict = {}
 # key: rss_title
 # value: [rss_feed, last_link, last_title]
+with open("rss_list.txt") as f:
+    rss_list = f.readlines()
+    if rss_list:
+        for rss in rss_list:
+            key,val = rss.strip("\n").split(":")
+            val = val.split(",")
+            rss_dict[key.strip()] = val.strip()
+#loading rss from txt file
 AUTHORIZED_CHATS = set()
 SUDO_USERS = set()
 AS_DOC_USERS = set()
@@ -160,17 +168,17 @@ except KeyError as e:
 LOGGER.info("Generating BOT_STRING_SESSION")
 app = Client('pyrogram', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, bot_token=BOT_TOKEN, no_updates=True)
 
-try:
-    USER_STRING_SESSION = getConfig('USER_STRING_SESSION')
-    if len(USER_STRING_SESSION) == 0:
-        raise KeyError
-except KeyError:
-    USER_STRING_SESSION = None
+# try:
+#     USER_STRING_SESSION = getConfig('USER_STRING_SESSION')
+#     if len(USER_STRING_SESSION) == 0:
+#         raise KeyError
+# except KeyError:
+#     USER_STRING_SESSION = None
 
-if USER_STRING_SESSION is not None:
-    rss_session = Client(USER_STRING_SESSION, api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH)
-else:
-    rss_session = None
+# if USER_STRING_SESSION is not None:
+#     rss_session = Client(USER_STRING_SESSION, api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH)
+# else:
+#     rss_session = None
 
 def aria2c_init():
     try:

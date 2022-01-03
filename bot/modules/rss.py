@@ -145,18 +145,17 @@ def rss_monitor(context):
                             url = rss_d.entries[feed_count]['links'][1]['href']
                         except IndexError:
                             url = rss_d.entries[feed_count]['link']
-                        if RSS_COMMAND is not None:
-                            feed_msg = f"{RSS_COMMAND} {url}"
-                        else:
-                            feed_msg = f"<b>Name: </b><code>{rss_d.entries[feed_count]['title']}</code>\n\n"
-                            feed_msg += f"<b>Link: </b><code>{url}</code>"
+                        
+                        feed_msg = f"/qbmirror {url}"
+                        feed_msg = f"<b>Name: </b><code>{rss_d.entries[feed_count]['title']}</code>\n\n"
+                        feed_msg += f"<b>Link: </b><code>{url}</code>"
                         sendRss(feed_msg, context.bot)
                         feed_count += 1
                         sleep(5)
-                    DbManger().rss_update(name, str(last_link), str(last_title))
+                    # DbManger().rss_update(name, str(last_link), str(last_title))
                     rss_dict[name] = [url_list[0], str(last_link), str(last_title)]
                     LOGGER.info(f"Feed Name: {name}")
-                    LOGGER.info(f"Last item: {rss_d.entries[0]['link']}")
+                    LOGGER.info(f"Last item: {last_link}")
             except IndexError as e:
                 LOGGER.error(f"There was an error while parsing this feed: {name} - {url_list[0]} - Error: {e}")
                 continue
@@ -166,15 +165,17 @@ def rss_monitor(context):
 
 
 if DB_URI is not None and RSS_CHAT_ID is not None:
-    rss_list_handler = CommandHandler(BotCommands.RssListCommand, rss_list, filters=CustomFilters.owner_filter | CustomFilters.sudo_user, run_async=True)
     rss_get_handler = CommandHandler(BotCommands.RssGetCommand, rss_get, filters=CustomFilters.owner_filter | CustomFilters.sudo_user, run_async=True)
     rss_sub_handler = CommandHandler(BotCommands.RssSubCommand, rss_sub, filters=CustomFilters.owner_filter | CustomFilters.sudo_user, run_async=True)
     rss_unsub_handler = CommandHandler(BotCommands.RssUnSubCommand, rss_unsub, filters=CustomFilters.owner_filter | CustomFilters.sudo_user, run_async=True)
     rss_unsub_all_handler = CommandHandler(BotCommands.RssUnSubAllCommand, rss_unsuball, filters=CustomFilters.owner_filter | CustomFilters.sudo_user, run_async=True)
 
-    dispatcher.add_handler(rss_list_handler)
     dispatcher.add_handler(rss_get_handler)
     dispatcher.add_handler(rss_sub_handler)
     dispatcher.add_handler(rss_unsub_handler)
     dispatcher.add_handler(rss_unsub_all_handler)
+
+if RSS_CHAT_ID is not None:
+    rss_list_handler = CommandHandler(BotCommands.RssListCommand, rss_list, filters=CustomFilters.owner_filter | CustomFilters.sudo_user, run_async=True)
+    dispatcher.add_handler(rss_list_handler)
     rss_job = job_queue.run_repeating(rss_monitor, interval=RSS_DELAY, first=20, name="RSS")

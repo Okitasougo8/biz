@@ -52,26 +52,26 @@ def editMessage(text: str, message: Message, reply_markup=None):
         return
 
 def sendRss(text: str, bot):
-    if rss_session is None:
-        try:
-            return bot.send_message(RSS_CHAT_ID, text, parse_mode='HTMl', disable_web_page_preview=True)
-        except RetryAfter as r:
-            LOGGER.warning(str(r))
-            time.sleep(r.retry_after * 1.5)
-            return sendRss(text, bot)
-        except Exception as e:
-            LOGGER.error(str(e))
-            return
-    else:
-        try:
-            return rss_session.send_message(RSS_CHAT_ID, text, parse_mode='HTMl', disable_web_page_preview=True)
-        except FloodWait as e:
-            LOGGER.warning(str(e))
-            time.sleep(e.x * 1.5)
-            return sendRss(text, bot)
-        except Exception as e:
-            LOGGER.error(str(e))
-            return
+    # if rss_session is None:
+    try:
+        return bot.send_message(RSS_CHAT_ID, text, parse_mode='HTMl', disable_web_page_preview=True)
+    except RetryAfter as r:
+        LOGGER.warning(str(r))
+        time.sleep(r.retry_after * 1.5)
+        return sendRss(text, bot)
+    except Exception as e:
+        LOGGER.error(str(e))
+        return
+    # else:
+    #     try:
+    #         return rss_session.send_message(RSS_CHAT_ID, text, parse_mode='HTMl', disable_web_page_preview=True)
+    #     except FloodWait as e:
+    #         LOGGER.warning(str(e))
+    #         time.sleep(e.x * 1.5)
+    #         return sendRss(text, bot)
+    #     except Exception as e:
+    #         LOGGER.error(str(e))
+    #         return
 
 def deleteMessage(bot, message: Message):
     try:
