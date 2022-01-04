@@ -118,7 +118,7 @@ with open("rss_list.txt") as f:
     rss_list = f.readlines()
     if rss_list:
         for rss in rss_list:
-            key,val = rss.strip("\n").split(":")
+            key,val = rss.strip("\n").split(":",1)
             val = val.split(",")
             rss_dict[key.strip()] = [i.strip() for i in val]
 #loading rss from txt file

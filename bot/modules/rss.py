@@ -1,9 +1,10 @@
-import feedparser
+import feedparser, random
 # import requests
 
 # from io import BytesIO
 from time import sleep
 from telegram.ext import CommandHandler
+from telegram import Update
 # from requests.exceptions import RequestException
 
 from bot import dispatcher, job_queue, rss_dict, rss_dict_lock, LOGGER, DB_URI, RSS_DELAY, RSS_CHAT_ID, RSS_COMMAND
@@ -12,6 +13,7 @@ from bot.helper.ext_utils.bot_utils import new_thread
 from bot.helper.telegram_helper.filters import CustomFilters
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.ext_utils.db_handler import DbManger
+from bot.modules.mirror import _mirror
 
 def rss_list(update, context):
     if len(rss_dict) > 0:
@@ -149,7 +151,12 @@ def rss_monitor(context):
                         feed_msg = f"/qbmirror {url}"
                         feed_msg = f"<b>Name: </b><code>{rss_d.entries[feed_count]['title']}</code>\n\n"
                         feed_msg += f"<b>Link: </b><code>{url}</code>"
-                        sendRss(feed_msg, context.bot)
+
+                        msg_obj = sendRss(feed_msg, context.bot)
+                        update_id = random.randint(111111111,999999999)
+                        update = Update(update_id,msg_obj)
+                        # _mirror(context.bot, update, isQbit=True, feed_link=url)
+
                         feed_count += 1
                         sleep(5)
                     # DbManger().rss_update(name, str(last_link), str(last_title))

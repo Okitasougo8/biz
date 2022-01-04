@@ -323,7 +323,7 @@ class MirrorListener(listeners.MirrorListeners):
         else:
             update_all_messages()
 
-def _mirror(bot, update, isZip=False, extract=False, isQbit=False, isLeech=False, pswd=None):
+def _mirror(bot, update, isZip=False, extract=False, isQbit=False, isLeech=False, pswd=None, feed_link=None):
     mesg = update.message.text.split('\n')
     message_args = mesg[0].split(' ', maxsplit=1)
     name_args = mesg[0].split('|', maxsplit=1)
@@ -338,6 +338,8 @@ def _mirror(bot, update, isZip=False, extract=False, isQbit=False, isLeech=False
             link = ''
     except IndexError:
         link = ''
+    if feed_link:
+        link=feed_link
     try:
         name = name_args[1]
         name = name.split(' pswd: ')[0]
