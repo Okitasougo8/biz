@@ -120,7 +120,7 @@ with open("rss_list.txt") as f:
         for rss in rss_list:
             key,val = rss.strip("\n").split(":")
             val = val.split(",")
-            rss_dict[key.strip()] = val.strip()
+            rss_dict[key.strip()] = [i.strip() for i in val]
 #loading rss from txt file
 AUTHORIZED_CHATS = set()
 SUDO_USERS = set()
