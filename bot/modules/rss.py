@@ -149,18 +149,22 @@ def rss_monitor(context):
                             url = rss_d.entries[feed_count]['link']
                         
                         feed_msg = f"/qbmirror {url}"
-                        feed_msg = f"<b>Name: </b><code>{rss_d.entries[feed_count]['title']}</code>\n\n"
-                        feed_msg += f"<b>Link: </b><code>{url}</code>"
+                        LOGGER.info(f"/qbmirror {url}")
+                        # feed_msg = f"<b>Name: </b><code>{rss_d.entries[feed_count]['title']}</code>\n\n"
+                        # feed_msg += f"<b>Link: </b><code>{url}</code>"
 
                         msg_obj = sendRss(feed_msg, context.bot)
                         update_id = random.randint(111111111,999999999)
                         update = Update(update_id,msg_obj)
-                        # _mirror(context.bot, update, isQbit=True, feed_link=url)
+                        _mirror(context.bot, update, isQbit=True, feed_link=url)
 
                         feed_count += 1
                         sleep(5)
                     # DbManger().rss_update(name, str(last_link), str(last_title))
                     rss_dict[name] = [url_list[0], str(last_link), str(last_title)]
+                    feed_msg = f"Feed Name: {name}"
+                    feed_msg += f"Last item: {last_link}"
+                    sendRss(feed_msg, context.bot)
                     LOGGER.info(f"Feed Name: {name}")
                     LOGGER.info(f"Last item: {last_link}")
             except IndexError as e:
