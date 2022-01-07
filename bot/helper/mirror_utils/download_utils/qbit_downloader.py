@@ -221,7 +221,18 @@ class QbitTorrent:
                 if self.__qbitsel:
                     for dirpath, subdir, files in os.walk(f"{self.dire}", topdown=False):
                         for filee in files:
-                            if filee.endswith(".!qB") or filee.endswith('.parts') and filee.startswith('.'):
+                            if filee.endswith(('.!qB', '.txt', '.ink', '.html', '.nfo')):
+                                os.remove(os.path.join(dirpath, filee))
+                        for folder in subdir:
+                            if folder == ".unwanted":
+                                shutil.rmtree(os.path.join(dirpath, folder))
+                    for dirpath, subdir, files in os.walk(f"{self.dire}", topdown=False):
+                        if not os.listdir(dirpath):
+                            os.rmdir(dirpath)
+                if not self.qbitsel:
+                    for dirpath, subdir, files in os.walk(f"{self.dire}", topdown=False):
+                        for filee in files:
+                            if filee.endswith(('.txt', '.ink', '.html', '.nfo')):
                                 os.remove(os.path.join(dirpath, filee))
                         for folder in subdir:
                             if folder == ".unwanted":
